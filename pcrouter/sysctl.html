@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Archivo de configuración</title>
+    <style>
+
+*{
+    margin: 0;
+    margin-top: -7;
+    padding: 10;
+}
+
+.menu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #000;
+    padding: 0px;
+    transition: top 0.3s ease;
+}
+
+.content {
+    padding: 100px 20px; /* Añade suficiente margen superior para evitar que el contenido se solape con la barra de menú */
+}
+
+.logo{
+    width: 150px;
+    height: 80px;
+}
+
+nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 20px;
+    padding-left: 5%;
+    padding-right: 5%;
+    font-weight: bold;
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+}
+
+nav li {
+    display: inline;
+    margin: 0 20px;
+}
+
+nav a {
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+    font-size: 18px;
+    position: relative;
+}
+
+nav a::before {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    bottom: 0;
+    left: 0;
+    background-color: rgb(140, 0, 255);
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.3s;
+}
+
+nav a:hover::before {
+    transform: scaleX(1);
+    transform-origin: left;
+}
+
+html{
+    background-color: aqua;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+        
+}
+
+    </style>
+</head>
+
+<body bgcolor="#E6E6E6">
+    
+    <div class="menu" id="menu">
+        <nav>
+          <img class="logo" src="/logo.png">
+            <ul>
+                <li><a href="/">INICIO</a></li>
+                <li><a href="PCROUTER.html">ATRAS</a></li>
+                <li><a href="https://www.youtube.com/@alvaradoY365" target="_blank">YOUTUBE</a></li>
+                <li><a href="https://github.com/Alberto-1905" target="_blank">GIT HUB</a></li>
+            </ul>
+        </nav>
+      </div>
+      <div class="content">
+
+<pre style="font-size: x-large">
+#
+# /etc/sysctl.conf - Archivo de configuración para configurar las variables del sistema
+# Ver /etc/sysctl.d/ para variables de sistema adicionales.
+# Consulte sysctl.conf (5) para obtener información.
+#
+
+#kernel.domainname = ejemplo.com
+
+# Descomente lo siguiente para detener los mensajes de bajo nivel en la consola
+#núcleo.printk = 3 4 1 3
+
+############################################## ############3
+# Funciones encontradas previamente en netbase
+#
+
+# Descomente las siguientes dos líneas para habilitar la protección Spoof (filtro de ruta inversa)
+# Active la verificación de la dirección de origen en todas las interfaces para
+# prevenir algunos ataques de suplantación de identidad
+#net.ipv4.conf.default.rp_filter=1
+#net.ipv4.conf.all.rp_filter=1
+
+# Descomente la siguiente línea para habilitar las cookies TCP/IP SYN
+# Ver http://lwn.net/Articles/277146/
+# Nota: Esto también puede afectar las sesiones TCP de IPv6
+#net.ipv4.tcp_syncookies=1
+
+# Descomente la siguiente línea para habilitar el reenvío de paquetes para IPv4
+<font color="red">net.ipv4.ip_forward=1</font>
+
+# Descomente la siguiente línea para habilitar el reenvío de paquetes para IPv6
+# Habilitar esta opción deshabilita la configuración automática de direcciones sin estado
+# basado en anuncios de enrutador para este host
+#net.ipv6.conf.all.forwarding=1
+
+
+############################################## #################
+# Configuraciones adicionales: estas configuraciones pueden mejorar la red
+# seguridad del host y prevención contra algunos ataques de red
+# incluyendo ataques de suplantación de identidad y ataques de hombre en el medio a través de
+# redirección. Sin embargo, algunos entornos de red requieren que estos
+# configuraciones están deshabilitadas, así que revíselas y habilítelas según sea necesario.
+
+# No acepte redireccionamientos ICMP (evite ataques MITM)
+#net.ipv4.conf.all.accept_redirects = 0
+#net.ipv6.conf.all.accept_redirects = 0
+# _o_
+# Acepte redireccionamientos ICMP solo para las puertas de enlace enumeradas en nuestro valor predeterminado
+# lista de puertas de enlace (habilitada de forma predeterminada)
+# net.ipv4.conf.all.secure_redirects = 1
+#
+# No envíe redireccionamientos ICMP (no somos un enrutador)
+#net.ipv4.conf.all.send_redirects = 0
+#
+# No acepte paquetes de ruta de origen IP (no somos un enrutador)
+#net.ipv4.conf.all.accept_source_route = 0
+#net.ipv6.conf.all.accept_source_route = 0
+#
+# Registro de paquetes marcianos
+#net.ipv4.conf.all.log_martians = 1
+
+############################################## #################
+# Clave de solicitud del sistema mágico
+# 0=deshabilitar, 1=habilitar todo, >1 máscara de bits de funciones sysrq
+# Ver https://www.kernel.org/doc/html/latest/admin-guide/sysrq.html
+# para lo que hacen otros valores
+#kernel.sysrq=438
+</div>
+
+<script> 
+// Obtenemos una referencia al elemento de la barra de menú
+const menu = document.getElementById('menu');
+
+// Variable para rastrear la posición anterior de desplazamiento
+let prevScrollPos = window.pageYOffset;
+
+// Función para manejar el desplazamiento
+function handleScroll() {
+    const currentScrollPos = window.pageYOffset;
+
+    if (prevScrollPos > currentScrollPos) {
+        // Mostrar la barra de menú cuando el usuario se desplaza hacia arriba
+        menu.style.top = '0';
+    } else {
+        // Ocultar la barra de menú cuando el usuario se desplaza hacia abajo
+        menu.style.top = '-100px'; // Puedes ajustar la cantidad de píxeles que quieras ocultar
+    }
+
+    prevScrollPos = currentScrollPos;
+}
+
+// Asociamos la función de manejo de desplazamiento al evento "scroll"
+window.addEventListener('scroll', handleScroll);
+</script>
+</div>
+</body>
+</html>

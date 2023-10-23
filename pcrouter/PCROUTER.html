@@ -1,0 +1,161 @@
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="estilo.css">
+</head>
+<body>
+    <div class="menu" id="menu">
+        <nav>
+          <img class="logo" src="/logo.png">
+            <ul>
+                <li><a href="/">INICIO</a></li>
+                <li><a href="https://www.youtube.com/@alvaradoY365" target="_blank">YOUTUBE</a></li>
+                <li><a href="https://github.com/Alberto-1905" target="_blank">GIT HUB</a></li>
+            </ul>
+        </nav>
+      </div>
+      <div class="content">
+    <h1 class="titulo">Configurar una PC Linux/Ubuntu a Router</h1><br>
+
+<h2>Ubuntu 20.04 - requerimientos minimos</h2>
+    <ul class="uno">- CPU: 1 <abbr class="texto" title="la unión del elemento compositivo giga (que se refiere a “mil millones de veces”) y el término hertz (una unidad de frecuencia equivalente a un ciclo por segundo).">GIGAHERTZ</abbr><br><br>
+    
+    - ram: 1 <abbr class="texto" title="Medida de la memoria de una computadora que es igual a 1 000 millones de bytes.">gigabyte</abbr><br><br>
+    
+    - disco minimo de 2.5 gigabytes<br><br>
+    
+    - Dos tarjetas de red WAN/LAM o lan/lan o wan/wan</ul><br>
+
+    <h2>Paso 1: configurar interfaces de red (netplan)</h2>
+    
+    <p>en esta vercion de ubutnu 20.04 usaremos la carpeta netplan..<br><br>
+    Escribiremos el siguiente comando<br>
+
+    <h3>
+        <div>&nbsp;&nbsp;&nbsp;
+<span id="enlace">nano /etc/netplan/01-network-manager-all.yaml</span>
+    
+            <button id="copiador">copiar</button>
+        </div>  
+    </h3>
+
+    <script src="boton.js"></script>
+    luego de haver creado el archivo ponemos los siguientes comandos<br>
+    
+    <h3>
+     <pre>   
+network:
+  ethernets:
+    wlps0:
+      dhcp4: true
+    enp0s8:
+      addresses: [192.168.1.1/24]
+      nameservers:
+        addresses: [8.8.8.8, 8.8.4.4]
+  versión: 2
+    </pre>
+    </h3>
+    
+    control + o para guardar, damos enter<br>
+    control + x para salir<br>
+
+Debemos respetar cada espacio en cada linea <br><br>
+
+<h3>&nbsp;&nbsp;&nbsp;netplan apply</h3>
+Aplicamos lo antes escrito   <br><br>   
+
+<h2>Paso 2: Debemos habilitar el reenvio de paquetes entre interfaces</h2>
+
+	
+<h3>&nbsp;&nbsp;&nbsp;nano /etc/sysctl.conf</h3> 
+
+<a class="system" href="sysctl.html">sysctl.conf</a><br>
+
+    descomentar la siguiente linea:<br>
+    
+    <h3>&nbsp;&nbsp;&nbsp;net.ipv4.ip_forward-1</h3>
+    
+    control + o para guardar, damos enter<br>
+    
+    control + x para salir<br><br>
+    
+	aplicar cambios con el comando:<br>
+	
+    <h3>&nbsp;&nbsp;&nbsp;sudo sysctl -p  /etc/sysctl.conf</h3><br>
+    
+    comprobamos que se a modificado
+    <h3>&nbsp;&nbsp;&nbsp;cat /proc/sys/net/ipv4/ip_forward</h3><br>
+
+
+      <h2>Paso 3: CONFIGURAR SOURCE NAT (SNAT) EN IPTABLES</h2>   
+
+      <p>revisar la poliocapor defecto de<br>
+        <h3>&nbsp;&nbsp;&nbsp;iptables -L</h3><br>
+        
+           si esta a drop modifocar a accept<br>
+           <h3>&nbsp;&nbsp;&nbsp;iptables -P FORWARD ACCEPT</h3><br>
+
+          activar SNAT con enmarascamineto IP
+          (masquerade) poiendo el interfaz ewlps0 (dhcp) para
+          los paquetes que van hacia afuera.<br>
+           <h3>&nbsp;&nbsp;&nbsp;iptables -t nat -A POSTROUTING -o wlps0 -j MASQUERADE</h3><br>
+
+         revisar que la tabla nat este configurada<br>
+         <h3>&nbsp;&nbsp;&nbsp;iptables -L -nv -t nat</h3>
+        </p><br>
+
+        <h2>Paso 4: limpieza de reglas previas</h2>
+                Utilice estos comandos solo si desea eliminar completamente las iptables antes realizadas esto borra toda la NAT
+                <h3>&nbsp;&nbsp;&nbsp;iptables -F</h3><br>
+            <h3>&nbsp;&nbsp;&nbsp;iptables -t nat -F</h3><br>
+
+    <h2>Paso 5: guardar la configuracion iptables permanentemente</h2>
+
+    <h3>&nbsp;&nbsp;&nbsp;apt-get install iptables-persistent <abbr class="texto" title="Ejecutar el comando2 solo si se ejecuta el comando1">&&</abbr> netfilter-persistent save</h3>
+</div>
+
+<script>var boton = document.getElementById('copiador');
+
+    boton.addEventListener('click', copiarAlPortapapeles, false);
+    
+    function copiarAlPortapapeles(){
+        var enlace=document.getElementById('enlace');
+    
+        var inputFalso=document.createElement('input');
+        inputFalso.setAttribute("value", enlace.innerHTML);
+    
+        document.body.appendChild(inputFalso);
+    
+        inputFalso.select();
+    
+        document.execCommand('copy');
+    
+        document.body.removeChild(inputFalso);
+    }
+
+    // Obtenemos una referencia al elemento de la barra de menú
+const menu = document.getElementById('menu');
+
+// Variable para rastrear la posición anterior de desplazamiento
+let prevScrollPos = window.pageYOffset;
+
+// Función para manejar el desplazamiento
+function handleScroll() {
+    const currentScrollPos = window.pageYOffset;
+
+    if (prevScrollPos > currentScrollPos) {
+        // Mostrar la barra de menú cuando el usuario se desplaza hacia arriba
+        menu.style.top = '0';
+    } else {
+        // Ocultar la barra de menú cuando el usuario se desplaza hacia abajo
+        menu.style.top = '-100px'; // Puedes ajustar la cantidad de píxeles que quieras ocultar
+    }
+
+    prevScrollPos = currentScrollPos;
+}
+
+// Asociamos la función de manejo de desplazamiento al evento "scroll"
+window.addEventListener('scroll', handleScroll);
+</script>
+
+</body>
+</html>
